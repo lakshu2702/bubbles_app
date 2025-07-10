@@ -1,10 +1,7 @@
 # 🫧 Bubbles Pop Game
+A simple interactive bubble-popping game built using **HTML5 Canvas** and **Vanilla JavaScript**.
 
-> A simple interactive bubble-popping game built using **HTML5 Canvas** and **Vanilla JavaScript**.
-
-![Bubbles App Demo]
-
-## 🎮 Game Demo
+# 🎮 Game Demo
 
 ![Bubbles App Demo](demo.gif)
 
