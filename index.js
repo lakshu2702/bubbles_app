@@ -1,190 +1,157 @@
-// Canvas setup with responsive scaling
 const canvas = document.getElementById('bubblesCanvas');
 const ctx = canvas.getContext('2d');
 
-// Set up canvas for high DPI displays
-function setupCanvas() {
-    const rect = canvas.getBoundingClientRect();
-    const dpr = window.devicePixelRatio || 1;
-    
-    canvas.width = 800 * dpr;
-    canvas.height = 400 * dpr;
-    
-    canvas.style.width = Math.min(800, window.innerWidth - 40) + 'px';
-    canvas.style.height = Math.min(400, (window.innerWidth - 40) * 0.5) + 'px';
-    
-    ctx.scale(dpr, dpr);
-}
+canvas.width = 800;
+canvas.height = 400;
 
-// Calculate scale factor for responsive positioning
-function getScaleFactor() {
-    const displayWidth = parseFloat(canvas.style.width) || 800;
-    return displayWidth / 800;
-}
+const bubbleColors = ['#ffb3d9', '#d9b3ff', '#b3d9ff', '#fff5b3'];
+const bubbleBorders = ['#ff80cc', '#cc80ff', '#80ccff', '#ffeb80'];
 
-setupCanvas();
-
-// Soft pastel bubble colors
-const colors = ['#ffb3ba', '#bae1ff', '#ffffba', '#baffc9'];
-const borderColors = ['#ff9aaa', '#9ad1ff', '#ffff9a', '#9affb9'];
-
-// Four bigger circles with more spacing
-const circles = [
-    { x: 120, y: 80, radius: 35, color: colors[0], borderColor: borderColors[0], hit: false },
-    { x: 120, y: 160, radius: 35, color: colors[1], borderColor: borderColors[1], hit: false },
-    { x: 120, y: 240, radius: 35, color: colors[2], borderColor: borderColors[2], hit: false },
-    { x: 120, y: 320, radius: 35, color: colors[3], borderColor: borderColors[3], hit: false }
+const bubbles = [
+    { x: 120, y: 80, size: 35, color: bubbleColors[0], border: bubbleBorders[0], popped: false },
+    { x: 120, y: 160, size: 35, color: bubbleColors[1], border: bubbleBorders[1], popped: false },
+    { x: 120, y: 240, size: 35, color: bubbleColors[2], border: bubbleBorders[2], popped: false },
+    { x: 120, y: 320, size: 35, color: bubbleColors[3], border: bubbleBorders[3], popped: false }
 ];
 
-// Simple arrows on the right side
 const arrows = [
-    { startX: 650, startY: 80, currentX: 650, active: false },
-    { startX: 650, startY: 160, currentX: 650, active: false },
-    { startX: 650, startY: 240, currentX: 650, active: false },
-    { startX: 650, startY: 320, currentX: 650, active: false }
+    { startX: 650, y: 80, currentX: 650, moving: false },
+    { startX: 650, y: 160, currentX: 650, moving: false },
+    { startX: 650, y: 240, currentX: 650, moving: false },
+    { startX: 650, y: 320, currentX: 650, moving: false }
 ];
 
-let hoverIndex = -1;
+let hoveredBubble = -1;
 
-// Draw circles and arrows
-function draw() {
+function drawEverything() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Draw circles with borders
-    circles.forEach((circle, index) => {
+
+    for (let i = 0; i < bubbles.length; i++) {
+        const bubble = bubbles[i];
+        
         ctx.beginPath();
-        ctx.arc(circle.x, circle.y, circle.radius, 0, Math.PI * 2);
-        ctx.fillStyle = circle.hit ? '#d3d3d3' : circle.color;
+        ctx.arc(bubble.x, bubble.y, bubble.size, 0, Math.PI * 2);
+        
+        if (bubble.popped) {
+            ctx.fillStyle = '#999999';
+        } else {
+            ctx.fillStyle = bubble.color;
+        }
         ctx.fill();
-        
-        // Add border
-        ctx.strokeStyle = circle.hit ? '#aaa' : circle.borderColor;
-        ctx.lineWidth = 2;
-        ctx.stroke();
-        
-        // Simple hover outline
-        if (hoverIndex === index && !circle.hit) {
-            ctx.strokeStyle = '#666';
-            ctx.lineWidth = 3;
+
+        if (!bubble.popped) {
+            ctx.strokeStyle = bubble.border;
+            ctx.lineWidth = 2;
             ctx.stroke();
         }
-        
-        ctx.closePath();
-    });
-    
-    // Draw minimal arrows
-    arrows.forEach((arrow) => {
-        if (arrow.active) {
-            ctx.beginPath();
-            ctx.moveTo(arrow.currentX, arrow.startY);
-            ctx.lineTo(arrow.currentX - 8, arrow.startY - 4);
-            ctx.lineTo(arrow.currentX - 8, arrow.startY + 4);
-            ctx.closePath();
-            ctx.fillStyle = '#555';
+
+        if (hoveredBubble === i && !bubble.popped) {
+            ctx.fillStyle = bubble.border;
             ctx.fill();
         }
-    });
-}
+    }
 
-// Move arrows towards circles
-function animate() {
-    let animating = false;
-    
-    arrows.forEach((arrow, index) => {
-        if (arrow.active) {
-            if (arrow.currentX > circles[index].x + circles[index].radius) {
-                arrow.currentX -= 3;
-                animating = true;
-            } else {
-                // Arrow hits circle
-                circles[index].hit = true;
-                arrow.active = false;
-            }
+    for (let i = 0; i < arrows.length; i++) {
+        const arrow = arrows[i];
+        
+        if (arrow.moving) {
+            ctx.beginPath();
+            ctx.moveTo(arrow.currentX, arrow.y);
+            ctx.lineTo(arrow.currentX - 25, arrow.y);
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(arrow.currentX - 25, arrow.y);         
+            ctx.lineTo(arrow.currentX - 15, arrow.y - 8);    
+            ctx.lineTo(arrow.currentX - 15, arrow.y + 8);    
+            ctx.fillStyle = '#333';
+            ctx.fill();
         }
-    });
-    
-    draw();
-    
-    if (animating) {
-        requestAnimationFrame(animate);
     }
 }
 
-// Get mouse/touch coordinates relative to canvas
-function getEventCoordinates(e) {
+function moveArrows() {
+    let somethingIsMoving = false;
+
+    for (let i = 0; i < arrows.length; i++) {
+        const arrow = arrows[i];
+        const bubble = bubbles[i];
+        
+        if (arrow.moving) {
+            if (arrow.currentX > bubble.x + bubble.size + 10) {
+                arrow.currentX -= 3;
+                somethingIsMoving = true;
+            } else {
+                bubble.popped = true;
+                arrow.moving = false;
+            }
+        }
+    }
+
+    drawEverything();
+
+    if (somethingIsMoving) {
+        requestAnimationFrame(moveArrows);
+    }
+}
+
+function getMousePosition(event) {
     const rect = canvas.getBoundingClientRect();
     const scaleX = 800 / rect.width;
     const scaleY = 400 / rect.height;
     
-    let clientX, clientY;
-    if (e.touches && e.touches[0]) {
-        clientX = e.touches[0].clientX;
-        clientY = e.touches[0].clientY;
-    } else {
-        clientX = e.clientX;
-        clientY = e.clientY;
-    }
-    
     return {
-        x: (clientX - rect.left) * scaleX,
-        y: (clientY - rect.top) * scaleY
+        x: (event.clientX - rect.left) * scaleX,
+        y: (event.clientY - rect.top) * scaleY
     };
 }
 
-// Mouse hover effect
-canvas.addEventListener('mousemove', function(e) {
-    const coords = getEventCoordinates(e);
-    
-    hoverIndex = -1;
-    
-    circles.forEach((circle, index) => {
-        const distance = Math.sqrt((coords.x - circle.x) ** 2 + (coords.y - circle.y) ** 2);
-        if (distance < circle.radius && !circle.hit) {
-            hoverIndex = index;
+canvas.addEventListener('mousemove', function(event) {
+    const mousePos = getMousePosition(event);
+    hoveredBubble = -1;
+
+    for (let i = 0; i < bubbles.length; i++) {
+        const bubble = bubbles[i];
+        const distance = Math.sqrt((mousePos.x - bubble.x) ** 2 + (mousePos.y - bubble.y) ** 2);
+        
+        if (distance < bubble.size && !bubble.popped) {
+            hoveredBubble = i;
         }
-    });
-    
-    draw();
+    }
+
+    drawEverything();
 });
 
-// Click/touch to shoot arrow
-function handleClick(e) {
-    e.preventDefault();
-    const coords = getEventCoordinates(e);
-    
-    circles.forEach((circle, index) => {
-        const distance = Math.sqrt((coords.x - circle.x) ** 2 + (coords.y - circle.y) ** 2);
-        if (distance < circle.radius && !circle.hit && !arrows[index].active) {
-            arrows[index].active = true;
-            animate();
+canvas.addEventListener('click', function(event) {
+    const mousePos = getMousePosition(event);
+
+    for (let i = 0; i < bubbles.length; i++) {
+        const bubble = bubbles[i];
+        const arrow = arrows[i];
+        const distance = Math.sqrt((mousePos.x - bubble.x) ** 2 + (mousePos.y - bubble.y) ** 2);
+        
+        if (distance < bubble.size && !bubble.popped && !arrow.moving) {
+            arrow.moving = true;
+            moveArrows();
         }
-    });
-}
+    }
+});
 
-canvas.addEventListener('click', handleClick);
-canvas.addEventListener('touchstart', handleClick);
-
-// Prevent scrolling on touch
-canvas.addEventListener('touchmove', function(e) {
-    e.preventDefault();
-}, { passive: false });
-
-// Reset everything
 function resetCanvas() {
-    circles.forEach(circle => circle.hit = false);
-    arrows.forEach(arrow => {
-        arrow.currentX = arrow.startX;
-        arrow.active = false;
-    });
-    hoverIndex = -1;
-    draw();
+    for (let i = 0; i < bubbles.length; i++) {
+        bubbles[i].popped = false;
+    }
+    
+    for (let i = 0; i < arrows.length; i++) {
+        arrows[i].currentX = arrows[i].startX;
+        arrows[i].moving = false;
+    }
+    
+    hoveredBubble = -1;
+    
+    drawEverything();
 }
 
-// Handle window resize
-window.addEventListener('resize', function() {
-    setupCanvas();
-    draw();
-});
-
-// Initialize
-draw();
+drawEverything();

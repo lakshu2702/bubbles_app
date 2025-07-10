@@ -25,7 +25,7 @@
             width: 100%;
             padding: 0 10px;
         }
-        h2, h3{
+        h1, h3{
             color: #333;
             font-weight: bold;
             margin: 10px 0;
@@ -33,10 +33,12 @@
 
         canvas{
             border: 2px solid #ccc;
+            border-style: dashed;
             background-color: #ffffff;
-            border-radius: 14px;
+            border-radius: 8px;
             max-width: 100%;
             height: auto;
+            display: block;
             margin: 0 auto;
         }
         button{
@@ -48,17 +50,17 @@
             background-color: #f5f5f5;
             cursor: pointer;
             min-height: 44px;
+            font-family: inherit;
         }
         button:hover{
             background-color: #e6e6e6;
-            
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2 style="color: #5c0000;">Bubbles Application</h2>
-        <h3 style="color: #44005c;">Click on the colorful bubbles to pop them!</h3>
+        <h1>Bubbles Application</h1>
+        <h3>Click on the colorful bubbles to pop them!</h3>
         <canvas id="bubblesCanvas" width="800" height="400"></canvas>
         <br>
         <button onclick="resetCanvas()">Reset</button>
