@@ -1,0 +1,2 @@
+# bubbles_app
+A simple interactive **Bubbles App** built using **HTML5 Canvas** and **Vanilla JavaScript** as part of the CanvasJS developer assignment. The app displays four colored circles with corresponding arrows; clicking a circle triggers the arrow to move and change the circle’s color on impact. A reset button restores the initial state—all drawn and managed within a single canvas without external libraries.
