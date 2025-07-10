@@ -29,8 +29,8 @@ This project is a lightweight, interactive canvas game where users can click on 
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/lakshu2702/bubbles_app
-   cd bubbles_app
+   git clone https://github.com/lakshu2702/bubbles-app
+   cd bubbles-app
    ```
 
 2. **Open the Game:**
