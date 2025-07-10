@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuBbLeS App</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 20px;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #fff7f0;
+            text-align: center;
+        }
+        h2{
+            color: #333;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        canvas{
+            border: 4px dashed #999;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        button{
+            margin-top: 25px;
+            font-size: 15px;
+            border-radius: 8px;
+            padding: 10px 20px;
+            background-color: #ffcf56;
+            cursor: pointer;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            font-weight: bolder;
+        }
+        button:hover{
+            background-color: #ffd877;
+        }
+    </style>
+</head>
+<body>
+    <h2>Interactive Canvas App</h2>
+    <canvas id="bubblesCanvas" width="600" height="300"></canvas>
+    <br>
+    <button onclick="resetCanvas()">Reset</button>
+    <script src="index.js"></script>
+</body>
+</html>
