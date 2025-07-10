@@ -5,44 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BuBbLeS App</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
         body{
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             font-family: 'Comic Sans MS', cursive, sans-serif;
             background-color: #fff7f0;
             text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
-        h2{
+        .container {
+            max-width: 100%;
+            width: 100%;
+            padding: 0 10px;
+        }
+        h2, h3{
             color: #333;
             font-weight: bold;
-            font-size: 20px;
+            margin: 10px 0;
         }
+
         canvas{
-            border: 4px dashed #999;
+            border: 2px solid #ccc;
             background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 14px;
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto;
         }
         button{
-            margin-top: 25px;
-            font-size: 15px;
-            border-radius: 8px;
-            padding: 10px 20px;
-            background-color: #ffcf56;
+            margin-top: 15px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 12px 20px;
+            background-color: #f5f5f5;
             cursor: pointer;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-            font-weight: bolder;
+            min-height: 44px;
         }
         button:hover{
-            background-color: #ffd877;
+            background-color: #e6e6e6;
+            
         }
     </style>
 </head>
 <body>
-    <h2>Interactive Canvas App</h2>
-    <canvas id="bubblesCanvas" width="600" height="300"></canvas>
-    <br>
-    <button onclick="resetCanvas()">Reset</button>
+    <div class="container">
+        <h2 style="color: #5c0000;">Bubbles Application</h2>
+        <h3 style="color: #44005c;">Click on the colorful bubbles to pop them!</h3>
+        <canvas id="bubblesCanvas" width="800" height="400"></canvas>
+        <br>
+        <button onclick="resetCanvas()">Reset</button>
+    </div>
     <script src="index.js"></script>
 </body>
 </html>
