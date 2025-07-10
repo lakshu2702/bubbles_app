@@ -9,13 +9,13 @@ A simple interactive bubble-popping game built using **HTML5 Canvas** and **Vani
 
 ---
 
-## ✨ Overview
+## Overview
 
 This project is a lightweight, interactive canvas game where users can click on colorful bubbles to pop them. The goal is to demonstrate proficiency with **HTML5 Canvas** and **JavaScript** by building an engaging, responsive mini-game without relying on any external libraries.
 
 ---
 
-## 🔑 Features
+## Features
 
 - Four pastel-colored interactive bubbles
 - Click to pop bubbles with animated arrows
@@ -25,7 +25,7 @@ This project is a lightweight, interactive canvas game where users can click on 
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 1. **Clone the Repository:**
    ```bash
@@ -38,7 +38,7 @@ This project is a lightweight, interactive canvas game where users can click on 
 
 ---
 
-## 🛠️ Technical Details
+## Technical Details
 
 ### Technologies Used:
 - **HTML5 Canvas** for rendering graphics
